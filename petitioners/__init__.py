@@ -7,22 +7,22 @@ import coid
 import flask
 import ohmr
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 
 class Petitioner(threading.local):
 
-    def __init__(
-        self,
-        tracer_header_name='X-Petitioners',
-        tracer_prefix='OHM-'
-    ):
+    def __init__(self,
+                 tracer_header_name='X-Petitioners',
+                 tracer_prefix='OHM-'):
+        super(Petitioner, self).__init__()
         self.tracer_header_name = tracer_header_name
         self.petition_tracer = ohmr.Tracer(coid.Id(prefix=tracer_prefix))
 
     def generate_petition(self):
         self.petition_tracer.reset()
-        flask.current_app.petitioner = self.petition_tracer.id
+        flask.current_app.petition = self.petition_tracer.id
+        flask.current_app.petitioners = self.petitioners
 
     def petition_request(self, response):
         response.headers[self.tracer_header_name] = (
@@ -41,6 +41,9 @@ class Petitioner(threading.local):
 
 
 def register_flask_app(tracer_name, tracer_prefix):
+    """
+    Registers a petitioner tracer onto a flask app when it is instantiated.
+    """
 
     def register(app_cls):
 
