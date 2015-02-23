@@ -1,4 +1,4 @@
-# FRL Flask Request Tracer
+# Petitioners
 
 [![Build Status](https://secure.travis-ci.org/balanced/petitioners.png?branch=master)](http://travis-ci.org/balanced/petitioners) [![Latest Version](https://pypip.in/version/petitioners/badge.svg)](https://pypi.python.org/pypi/petitioners/) [![Downloads](https://pypip.in/download/petitioners/badge.svg)](https://pypi.python.org/pypi/petitioners/) [![Supported Python versions](https://pypip.in/py_versions/petitioners/badge.svg)](https://pypi.python.org/pypi/petitioners/) [![License](https://pypip.in/license/petitioners/badge.svg)](https://pypi.python.org/pypi/petitioners/)
 
@@ -26,11 +26,10 @@ X-Request-Trace: Trace-123123,Trace-123432
 
 The current trace value can be accessed from `app` via the `petition` or `petitioners` properties
 
-```
-import flask
-
-print flask.current_app.petition
+```python
+>>> import flask
+>>> print flask.current_app.petition
 'Trace-123432'
-print flask.current_app.petitioners
+>>> print flask.current_app.petitioners
 '[Trace-123123,Trace-123432]'
 ```
