@@ -1,11 +1,9 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import unicode_literals
 
-import json
 import unittest
 
 import flask
-import mock
 from werkzeug.test import Client
 from werkzeug.wrappers import Response
 
@@ -62,5 +60,4 @@ class ServerTestCase(BaseTestCase):
         headers = {TRACE_HEADER: 'Trace123'}
         response = self.client.get('/', headers=headers)
         value = response.headers[TRACE_HEADER]
-        self.assertTrue(value.startswith('Trace123,'+TRACE_PREFIX))
-
+        self.assertTrue(value.startswith('Trace123,' + TRACE_PREFIX))

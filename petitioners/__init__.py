@@ -7,17 +7,16 @@ import coid
 import flask
 import ohmr
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 class Petitioner(threading.local):
 
-    def __init__(self,
-                 tracer_header_name='X-Petitioners',
-                 tracer_prefix='OHM-'):
+    def __init__(self, tracer_header_name, tracer_prefix, app=None):
         super(Petitioner, self).__init__()
         self.tracer_header_name = tracer_header_name
         self.petition_tracer = ohmr.Tracer(coid.Id(prefix=tracer_prefix))
+        self.app = app
 
     def generate_petition(self):
         self.petition_tracer.reset()
@@ -39,6 +38,18 @@ class Petitioner(threading.local):
             return current
         return petitioners.split(',') + current
 
+    @classmethod
+    def register(cls, app, tracer_name='X-Petitioners', tracer_prefix='OHM-'):
+        app.petitioner = Petitioner(tracer_name, tracer_prefix, app)
+        app.before_request(app.petitioner.generate_petition)
+        app.after_request(app.petitioner.petition_request)
+        return app
+
+    def __repr__(self):
+        app = self.app or 'Detached'
+        return '<Petitioner ({}){}={}>'.format(
+            app, self.tracer_header_name, self.petitioners)
+
 
 def register_flask_app(tracer_name, tracer_prefix):
     """
@@ -47,13 +58,11 @@ def register_flask_app(tracer_name, tracer_prefix):
 
     def register(app_cls):
 
-        petitioner = Petitioner(tracer_name, tracer_prefix)
 
         @functools.wraps(app_cls)
         def wrapper(*args, **kwargs):
             instance = app_cls(*args, **kwargs)
-            instance.before_request(petitioner.generate_petition)
-            instance.after_request(petitioner.petition_request)
+            Petitioner.register(instance, tracer_name, tracer_prefix)
             return instance
 
         return wrapper

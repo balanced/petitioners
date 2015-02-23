@@ -10,6 +10,9 @@ class FlaskApp(flask.Flask):
     pass
 
 app = FlaskApp('name')
+
+# or if you prefer not to use a decorator
+petitioners.Petitioner.register(app)
 ```
 
 Requests to `app` will now generate response with headers tagged like
@@ -24,12 +27,14 @@ If this header already exists then it will be appended to like
 X-Request-Trace: Trace-123123,Trace-123432
 ```
 
-The current trace value can be accessed from `app` via the `petition` or `petitioners` properties
+The current trace value can be accessed from `app` via the `petitioners` property
 
 ```python
 >>> import flask
->>> print flask.current_app.petition
-'Trace-123432'
+>>> import petitioners
+>>> app = flask.Flask('name')
+>>> petitioners.Petitioner.register(app)
+>>> app.test_request_context().push()
 >>> print flask.current_app.petitioners
-'[Trace-123123,Trace-123432]'
+<Petitioner (<Flask 'name'>)X-Petitioners=[u'OHM-c92bffaf1b27497aad73a1cb02b22059']>
 ```
