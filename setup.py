@@ -58,7 +58,9 @@ setuptools.setup(
     ],
     author='Balanced',
     author_email='dev+petitioners@balancedpayments.com',
-    license='The MIT License: http://www.opensource.org/licenses/mit-license.php',
+    license=(
+        'The MIT License: http://www.opensource.org/licenses/mit-license.php'
+    ),
     packages=packages,
     include_package_data=True,
     zip_safe=False,

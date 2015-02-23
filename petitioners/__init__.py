@@ -58,7 +58,6 @@ def register_flask_app(tracer_name, tracer_prefix):
 
     def register(app_cls):
 
-
         @functools.wraps(app_cls)
         def wrapper(*args, **kwargs):
             instance = app_cls(*args, **kwargs)
