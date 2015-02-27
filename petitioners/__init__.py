@@ -7,7 +7,7 @@ import coid
 import flask
 import ohmr
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 
 
 class Petitioner(threading.local):
@@ -24,9 +24,10 @@ class Petitioner(threading.local):
         flask.current_app.petitioners = self.petitioners
 
     def petition_request(self, response):
-        response.headers[self.tracer_header_name] = (
-            ','.join(self.petitioners)
-        )
+        if response:
+            response.headers[self.tracer_header_name] = (
+                ','.join(self.petitioners)
+            )
 
         return response
 
