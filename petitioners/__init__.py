@@ -7,7 +7,7 @@ import coid
 import flask
 import ohmr
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 
 class Petitioner(threading.local):
