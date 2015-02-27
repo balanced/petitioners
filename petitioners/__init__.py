@@ -7,7 +7,7 @@ import coid
 import flask
 import ohmr
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 
 class Petitioner(threading.local):
@@ -33,7 +33,10 @@ class Petitioner(threading.local):
     @property
     def petitioners(self):
         current = [self.petition_tracer.id]
-        petitioners = flask.request.headers.get(self.tracer_header_name, '')
+        petitioners = None
+        if flask.request:
+            petitioners = flask.request.headers.get(
+                self.tracer_header_name, '')
         if not petitioners:
             return current
         return petitioners.split(',') + current
